@@ -1,7 +1,1 @@
 
-<<<<<<< HEAD
-=======
-uvicorn==0.12.3
-gunicorn
-aiofiles==0.6.0
->>>>>>> 46f4fdd1540a1393bb9736f5273478d8d47117b5
