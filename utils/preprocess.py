@@ -62,21 +62,48 @@ def preprocess(data):
             mini = datetime.strptime(orden["date_opened"], '%Y-%m-%d %H:%M:%S')
     return resp_format(waiters, cashiers, zones, products, transactions, ids_conflict, maxi, mini, total_payments, correct_payments, used_time/transactions)
 
+def cash(number):
+    string = str(number)[::-1]
+    new = ""
+    if type(number) == int:
+        for l in range(0, len(string)):
+            new += string[l]
+            if l%3 == 2 and l != len(string)-1:
+                new += "."
+        money = new[::-1]
+        return money
+    else:
+        string = string.split(".")
+        if int(string[0]) != 0:
+            for l in string[0]:
+                new += l
+            new += ","
+        for l in range(0, len(string[1])):
+            new += string[1][l]
+            if l%3 == 2 and l != len(string[1])-1:
+                new += "."
+        money = new[::-1]
+        return money
+
+
 def resp_format(waiters, cashiers, zones, products, transactions, ids_conflict, maxi, mini, total_payments, correct_payments, used_time):
     resp_obj = {
         "waiters_tables": waiters,
         "cashiers_tables": cashiers,
         "zones_tables_usage": zones,
-        "tota_bills": transactions,
+        "total_bills": transactions,
         "conflicts": ids_conflict,
         "first_open": mini,
         "last_open": maxi,
         "products_quantity": products,
-        "total_payments": total_payments,
-        "expected_payments": correct_payments,
+        "total_payments": cash(total_payments),
+        "expected_payments": cash(correct_payments),
         "avrg_used_table": f"{int(used_time//3600)}:{int(used_time%3600//60)}:{int(used_time%60)}",
-        "avrg_spend_expected": correct_payments/transactions,
-        "avrg_spend_recived": total_payments/transactions
+        "avrg_spend_expected": cash(correct_payments/transactions),
+        "avrg_spend_recived": cash(total_payments/transactions), 
+        "total_loss": cash(correct_payments - total_payments),
+        "avrg_loss":cash(correct_payments/transactions - total_payments/transactions)
+
     }
     return resp_obj
 
